@@ -1,0 +1,52 @@
+<dot-portlet-base *ngIf="vm$ | async as vm">
+    <p-card class="px-2 py-2">
+        <p>identfier: 122121</p>
+        <p-table [value]="vm.history">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let col of vm.tableCols">
+                        {{ col.header }}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.quantity }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-divider></p-divider>
+        <div class="grid p-fluid p-3 mt-3">
+            <div class="col-12 md:col-10">
+                <p><b>Push history</b></p>
+            </div>
+            <div class="col-12 md:col-2">
+                <button pButton pRipple label="DELETE PUSH HISTORY" icon="pi pi-trash"></button>
+            </div>
+        </div>
+        <p-table [value]="vm.history">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let col of vm.tableCols">
+                        {{ col.header }}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.quantity }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</dot-portlet-base>

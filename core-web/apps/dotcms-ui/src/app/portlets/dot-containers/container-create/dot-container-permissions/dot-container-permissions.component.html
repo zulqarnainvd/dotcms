@@ -1,0 +1,97 @@
+<dot-portlet-base>
+    <p-card *ngIf="vm$ | async as vm">
+        <div class="grid p-fluid p-3">
+            <div class="col-12 md:col-3">
+                <span class="inline-block pr-3"><i class="pi pi-users"></i></span>
+                <p-treeSelect
+                    id="permissions"
+                    [options]="vm.roles"
+                    appendTo="body"
+                    [(ngModel)]="selectedRole"
+                    placeholder="Select Role"
+                    class="inline-block pl-2 w-11 p-inputtext"
+                >
+                </p-treeSelect>
+            </div>
+            <div class="col-12 md:col-1">
+                <button
+                    (click)="onAddRole()"
+                    [disabled]="!selectedRole"
+                    pButton
+                    pRipple
+                    type="button"
+                    label="ADD ROLE"
+                    class="p-button-outlined px-4"
+                ></button>
+            </div>
+            <div class="col-12 md:col-3">
+                <span class="inline-block pr-2"><i class="pi pi-user"></i></span>
+                <p-dropdown
+                    class="inline-block pl-2 w-11"
+                    [options]="vm.users"
+                    [(ngModel)]="selectedUser"
+                    optionLabel="name"
+                    placeholder="Select a User"
+                >
+                </p-dropdown>
+            </div>
+
+            <div class="col-12 md:col-2">
+                <button
+                    (click)="onAddUser()"
+                    pButton
+                    pRipple
+                    [disabled]="!selectedUser"
+                    type="button"
+                    label="ADD USERS"
+                    class="p-button-outlined"
+                ></button>
+            </div>
+        </div>
+        <p-table [value]="vm.permissions">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let col of vm.tableCols">
+                        {{ col.header }}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ri="rowIndex" let-row>
+                <tr>
+                    <td *ngFor="let col of vm.tableCols; let i = index">
+                        <div *ngIf="i === 0; else checkbox">
+                            {{ row[col.field] }}
+                        </div>
+                        <ng-template #checkbox>
+                            <p-checkbox
+                                *ngIf="col.field !== 'addTo'"
+                                [binary]="true"
+                                [(ngModel)]="row[col.field]"
+                                (onChange)="onPermissionChange(col.field, ri, $event)"
+                                [name]="col.field + ri"
+                                [value]="row[col.field]"
+                            ></p-checkbox>
+                        </ng-template>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+    <div class="text-center m-5">
+        <p>
+            <b>
+                No Permissions are assigned to this assets either indivdually orvia it's parent.
+                <br />
+                You may assign permission individually from this screen, or edit the parent object
+                permission for this asset to inherit
+            </b>
+        </p>
+        <button
+            pButton
+            pRipple
+            type="button"
+            label="Apply Changes"
+            class="p-button-outlined"
+        ></button>
+    </div>
+</dot-portlet-base>
