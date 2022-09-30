@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DotPortletBaseModule } from '@components/dot-portlet-base/dot-portlet-base.module';
 import { DotCategoriesListComponent } from './dot-categories-list.component';
 import { DotMessagePipeModule } from '@pipes/dot-message/dot-message-pipe.module';
+import { DotCategoriesAddNewModule } from './dot-categories-add-new/dot-categories-add-new.module';
 import { DotListingDataTableModule } from '@components/dot-listing-data-table';
 import { DotBaseTypeSelectorModule } from '@components/dot-base-type-selector';
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +15,7 @@ import { DotActionMenuButtonModule } from '@components/_common/dot-action-menu-b
 import { InputNumberModule } from 'primeng/inputnumber';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { FormsModule } from '@angular/forms';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 
 @NgModule({
     declarations: [DotCategoriesListComponent],
@@ -31,7 +33,10 @@ import { FormsModule } from '@angular/forms';
         DotEmptyStateModule,
         MenuModule,
         DotPortletBaseModule,
-        DotActionMenuButtonModule
-    ]
+        DotActionMenuButtonModule,
+        DotCategoriesAddNewModule,
+        DynamicDialogModule
+    ],
+    providers: [DialogService]
 })
 export class DotCategoriesListModule {}

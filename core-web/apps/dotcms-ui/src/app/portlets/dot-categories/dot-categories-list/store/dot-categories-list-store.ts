@@ -14,6 +14,7 @@ export interface DotCategoriesListState {
     categoryBreadCrumb: MenuItem[];
     breadCrumbStarterIcon: MenuItem;
     paginationPerPage: number;
+    addCategory: boolean;
 }
 
 @Injectable()
@@ -29,7 +30,8 @@ export class DotCategoriesListStore extends ComponentStore<DotCategoriesListStat
             selectedCategories: [],
             categoryBreadCrumb: this.getCategoryBreadCrumbs(),
             breadCrumbStarterIcon: this.breadCrumbStarterIcon,
-            paginationPerPage: 25
+            paginationPerPage: 25,
+            addCategory: false
         });
     }
     breadCrumbStarterIcon: MenuItem;
@@ -42,7 +44,8 @@ export class DotCategoriesListStore extends ComponentStore<DotCategoriesListStat
             selectedCategories,
             categoryBreadCrumb,
             breadCrumbStarterIcon,
-            paginationPerPage
+            paginationPerPage,
+            addCategory
         }: DotCategoriesListState) => {
             return {
                 getCategoryEndPoint,
@@ -52,7 +55,8 @@ export class DotCategoriesListStore extends ComponentStore<DotCategoriesListStat
                 selectedCategories,
                 categoryBreadCrumb,
                 breadCrumbStarterIcon,
-                paginationPerPage
+                paginationPerPage,
+                addCategory
             };
         }
     );
@@ -65,6 +69,11 @@ export class DotCategoriesListStore extends ComponentStore<DotCategoriesListStat
             };
         }
     );
+
+    /* A selector that returns the categoryBreadCrumb property of the state. */
+    readonly addCategorySelector$ = this.select(({ addCategory }: DotCategoriesListState) => {
+        return addCategory;
+    });
 
     /**
      * A function that updates the state of the store.
@@ -125,14 +134,26 @@ export class DotCategoriesListStore extends ComponentStore<DotCategoriesListStat
         }
     );
 
+    readonly updateAddCategory = this.updater<boolean>(
+        (state: DotCategoriesListState, addCategory: boolean) => {
+            return {
+                ...state,
+                addCategory
+            };
+        }
+    );
+
     /**
      * It returns an array of objects with a label property
      * @returns An array of objects with a label property.
      */
-    private getCategoriesActions(): { label: string }[] {
+    private getCategoriesActions(): MenuItem[] {
         return [
             {
-                label: this.dotMessageService.get('Add')
+                label: this.dotMessageService.get('Add'),
+                command: () => {
+                    this.updateAddCategory(true);
+                }
             },
             {
                 label: this.dotMessageService.get('Delete')

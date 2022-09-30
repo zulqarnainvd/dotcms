@@ -1,0 +1,56 @@
+<form [formGroup]="categoryForm">
+    <div class="field">
+        <label for="categoryName" class="block">Name</label>
+        <input
+            id="categoryName"
+            formControlName="categoryName"
+            type="text"
+            aria-describedby="categoryName-help"
+            pInputText
+        />
+        <small
+            *ngIf="
+                categoryForm.get('categoryName').invalid &&
+                categoryForm.get('categoryName').errors &&
+                (categoryForm.get('categoryName').dirty ||
+                    categoryForm.get('categoryName').touched) &&
+                categoryForm.get('categoryName').hasError('required')
+            "
+            id="categoryName-help"
+            class="p-error block"
+        >
+            Name is required.
+        </small>
+    </div>
+    <div class="field">
+        <label for="key" class="block">Key</label>
+        <input id="key" formControlName="key" type="text" formControlName="key" pInputText />
+    </div>
+    <div class="field">
+        <label for="keyWords" class="block">Key</label>
+        <textarea
+            [rows]="5"
+            formControlName="keywords"
+            [cols]="30"
+            formControlName="keywords"
+            pInputTextarea
+            [autoResize]="true"
+        ></textarea>
+    </div>
+    <div class="field">
+        <button
+            pButton
+            (click)="onCancel()"
+            class="mr-2 p-button-text p-button-plain"
+            type="button"
+            label="Cancel"
+        ></button>
+        <button
+            pButton
+            (click)="onSave()"
+            type="button"
+            [disabled]="!categoryForm.valid"
+            label="Save"
+        ></button>
+    </div>
+</form>

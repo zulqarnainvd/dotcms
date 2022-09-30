@@ -1,23 +1,54 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { DotListingDataTableComponent } from '@components/dot-listing-data-table/dot-listing-data-table.component';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { DotCategoriesListStore, DotCategoriesListState } from './store/dot-categories-list-store';
 import { DotCategory } from '@dotcms/app/shared/models/categories/dot-categories.model';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api/menuitem';
+import { DialogService } from 'primeng/dynamicdialog';
+import { DotCategoriesAddNewComponent } from './dot-categories-add-new/dot-categories-add-new.component';
+import { DotMessageService } from '@dotcms/app/api/services/dot-message/dot-messages.service';
 @Component({
     selector: 'dot-categories-list',
     templateUrl: './dot-categories-list.component.html',
     styleUrls: ['./dot-categories-list.component.scss'],
     providers: [DotCategoriesListStore]
 })
-export class DotCategoriesListComponent {
+export class DotCategoriesListComponent implements OnDestroy {
     vm$: Observable<DotCategoriesListState> = this.store.vm$;
+    addCategorySelector$ = this.store.addCategorySelector$;
+    private destroy$: Subject<boolean> = new Subject<boolean>();
     @Output() updateCategory: EventEmitter<MenuItem> = new EventEmitter();
     @ViewChild('listing', { static: false })
     listing: DotListingDataTableComponent;
 
-    constructor(private store: DotCategoriesListStore) {}
+    constructor(
+        private dotMessageService: DotMessageService,
+        private store: DotCategoriesListStore,
+        public dialogService: DialogService
+    ) {
+        this.addCategorySelector$.pipe(takeUntil(this.destroy$)).subscribe((addCategory) => {
+            if (addCategory) {
+                this.dialogService
+                    .open(DotCategoriesAddNewComponent, {
+                        header: this.dotMessageService.get('categories.create.title'),
+                        width: '30rem',
+                        closable: true,
+                        closeOnEscape: false
+                    })
+                    .onClose.subscribe(() => {
+                        this.store.updateAddCategory(false);
+                    });
+            } else {
+                this.store.updateAddCategory(false);
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 
     /**
      * The function clears the global search of listing-data-table by calling the clearGlobalSearch() function on the listing
